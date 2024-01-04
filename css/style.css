@@ -1,85 +1,182 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@100;200;300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@400&display=swap');
+
+:root {
+  --accent: #ffb74d;
+  --text-color: #2f3640;
+}
+
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Kanit', sans-serif !important;
+  font-family: 'Kanit', sans-serif;
 }
+
 .main-text {
-  font-weight: 100 !important;
+  font-weight: 100;
 }
+
 .wrapper {
-  min-height: 100vh !important;
+  min-height: 100vh;
   background-color: rgba(251, 251, 251);
 }
+
 .main {
-  height: 30vh;
+  min-height: 370px;
   color: #000;
-  -webkit-box-shadow: 0px 10px 9px 2px rgba(40, 53, 64, 0.32);
-  -moz-box-shadow: 0px 10px 9px 2px rgba(40, 53, 64, 0.32);
   box-shadow: 0px 10px 9px 2px rgba(40, 53, 64, 0.32);
 }
+
 .add-input {
   color: #000;
-  height: 6vh;
+  min-height: 50px;
   font-size: 1.4em;
-  font-family: 'Kanit', sans-serif !important;
-  font-weight: 300 !important;
+  font-family: 'Kanit', sans-serif;
+  font-weight: 300;
   border: 0;
   border-radius: 0;
-  -webkit-box-shadow: 0px -7px 12px -8px rgba(40, 53, 64, 0.41) inset;
-  -moz-box-shadow: 0px -7px 12px -8px rgba(40, 53, 64, 0.41) inset;
   box-shadow: 0px -7px 12px -8px rgba(40, 53, 64, 0.41) inset;
   text-indent: 1em;
 }
+
 .add-input:focus {
-  -webkit-box-shadow: 0px -7px 12px -8px rgba(40, 53, 64, 0.41) inset;
-  -moz-box-shadow: 0px -7px 12px -8px rgba(40, 53, 64, 0.41) inset;
   box-shadow: 0px -7px 12px -8px rgba(40, 53, 64, 0.41) inset;
 }
-.tasks {
-  min-height: 300px !important;
-}
+
 .task {
   border-bottom: 1px solid #c5c5c5;
   height: 50px;
-  font-weight: 100 !important;
-  font-family: 'Mukta', sans-serif !important;
-  color: #000000;
-  -moz-user-select: none;
-  -khtml-user-select: none;
+  font-weight: 100;
+  font-size: 1.4rem;
+  font-family: 'Mukta', sans-serif;
+  color: #000;
   user-select: none;
 }
+
 .task:hover .button {
   color: #494949c2;
   transition: 0.45s;
 }
+
 .task:hover .delete-btn {
   margin-top: 0;
   z-index: 0;
-  transition: 0.4s ease;
+  transition: 0.45s ease;
+}
+.task:hover .edit-btn {
+  margin-top: 0;
+  z-index: 0;
+  transition: 0.45s ease;
 }
 
 .delete-btn {
   margin-top: 3em;
   z-index: -1;
 }
+.edit-btn {
+  margin-top: -3em;
+  z-index: -1;
+}
+
 .task span {
-  font-weight: 200 !important;
+  font-weight: 200;
+}
+.buttons {
+  height: 49px;
 }
 .button {
   color: #49494900;
   transition: 0.45s;
 }
+
 .button:hover {
-  transform: scale(1.3);
+  transform: scale(1.1);
   transition: 0.3s;
   cursor: pointer;
+  color: #494949c2;
 }
+
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
+
 .task-text > span {
   transition: 0.3s ease;
+}
+
+.emptyImg {
+  width: 60px;
+  height: 60px;
+}
+
+/* Pagination Styles */
+.pager {
+  margin: 0 0 calc(60px / 16) rem;
+  font-size: 0;
+  text-align: center;
+}
+
+.pager__item {
+  display: inline-block;
+  vertical-align: top;
+  font-size: rem(18px);
+  font-weight: bold;
+  margin: 0 2px;
+}
+
+.pager__item.active .pager__link {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  text-decoration: none;
+}
+
+.pager__item--prev svg,
+.pager__item--next svg {
+  width: 8px;
+  height: 12px;
+}
+
+.pager__item--next .pager__link svg {
+  transform: rotate(180deg);
+  transform-origin: center center;
+}
+
+.pager__link {
+  position: relative;
+  border-radius: 4px;
+  display: block;
+  text-align: center;
+  width: rem(42px);
+  height: rem(42px);
+  line-height: rem(42px);
+  margin-left: -1px;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.pager__link:hover,
+.pager__link:focus,
+.pager__link:active {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  text-decoration: none;
+}
+
+.pager__link:hover svg path,
+.pager__link:focus svg path,
+.pager__link:active svg path {
+  fill: #fff;
+}
+
+.pager__item.active + .pager__item,
+.pager__item:hover + .pager__item .pager__link {
+  border-left-color: var(--accent);
+}
+
+.main > .container-fluid {
+  top: 83%;
 }
