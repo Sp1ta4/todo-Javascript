@@ -2,56 +2,78 @@ const $ = document;
 const tasksDiv = $.querySelector('#tasks-div')
 const tasks = $.getElementsByClassName('.task');
 const addInput = $.querySelector('#formGroupExampleInput');
-const pagLinks = $.querySelectorAll('.pagination .page-link');
-let tasksData;
+const pagination = $.querySelector('.pagination');
 const pageMaxTasksCount = 5;
-for (const link of pagLinks) {
-  link.onclick = () => {
-    let currentPage = +link.innerHTML;
-    let start = (currentPage - 1) * pageMaxTasksCount;
-    let end = start + pageMaxTasksCount;
-    const notes = tasksData.slice(start, end);
-    console.log(notes);
-  }
-}
+let tasksData;
+
+
 
 window.addEventListener('load', () => {
   tasksData = JSON.parse(localStorage.getItem("todos")) || [];
+  tasksData.length >= 5 && addPaginationLink(tasksData);
   renderTasks(tasksData.slice(0, pageMaxTasksCount));
+  paginationLinkAddClick();
 });
 
 addInput.addEventListener('keydown', function (e) {
   if (e.keyCode === 13) {
     const newTask = { id: _.uniqueId(), task: addInput.value, completed: false };
-    console.log(newTask);
     tasksData.push(newTask);
     localStorage.setItem("todos", JSON.stringify(tasksData));
-    addInput.value = '';
-    if (tasksData.length === 1) {
+    if ((tasksData.length > 1) && !((tasksData.length - 1) % pageMaxTasksCount)) {
+      addPaginationLink(tasksData);
+      paginationLinkAddClick();
+    } else {
       tasksDiv.innerHTML = '';
     }
+    addInput.value = '';
     tasksDiv.appendChild(createElement(newTask));
   }
 })
 
+
+//Pagination function
+function addPaginationLink(data) {
+  pagination.innerHTML = '';
+  for (let i = 1; i <= Math.ceil(data.length / pageMaxTasksCount); i++) {
+    pagination.insertAdjacentHTML('beforeend',
+      `<li class="page-item d-flex justify-content-center align-items-center">
+       <button class="btn btn-link page-link ps-3 pe-3 p-1 fs-5">${i}</button>
+      </li>`);
+  }
+}
+function paginationLinkAddClick() {
+  const pagLinks = $.querySelectorAll('.pagination .page-link');
+  for (link of pagLinks) {
+    link.onclick = function (event) {
+      const notes = listCalculation(this)
+      paginationNexPrev(notes, currentPage, event.target.innerText);
+    }
+  }
+}
+function listCalculation(self) {
+  let currentPage = +self.innerHTML;
+  let start = (currentPage - 1) * pageMaxTasksCount;
+  let end = start + pageMaxTasksCount;
+  return tasksData.slice(start, end);
+}
+function paginationNexPrev(data, currPage, clickedPage) {
+  if (currPage !== clickedPage) {
+    tasksDiv.innerHTML = '';
+    for (const task of data) {
+      tasksDiv.appendChild(createElement(task));
+    }
+  }
+}
+//Tasks all functions
 function renderTasks(tasksArray) {
   tasksArray.length ? tasksArray.forEach(elem => {
     tasksDiv.appendChild(createElement(elem));
   }) : addClearList()
 }
-
-function addClearList() {
-  tasksDiv.innerHTML = `
-            <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 290px !important;">
-                <img src="./images/empty.png" alt="empty" width="100" height="100">
-                <h5 class="text-secondary">You have not added any tasks yet</h5>
-            </div>`
-}
-
 function updateDeleted(taskElement) {
   tasks.removeChild(taskElement);
 }
-
 function updateCompleted(taskElement, obj) {
   taskElement.innerHTML = `
     <div class="checkbox-wrapper-52 p-3 ps-3 d-flex" >
@@ -77,7 +99,6 @@ function updateCompleted(taskElement, obj) {
       </div>
     </div>`;
 }
-
 function createElement(obj) {
   const task = document.createElement('div');
   task.className = 'task d-flex align-items-center position-relative';
@@ -107,7 +128,6 @@ function createElement(obj) {
     </div>`;
   return task;
 }
-
 function toggleCompleted(id) {
   const updatedTask = tasksData.find(elem => +elem.id === id);
   updatedTask.completed = !updatedTask.completed;
@@ -119,6 +139,7 @@ function deleteTask(id) {
   const taskElement = document.getElementById(id);
   localStorage.setItem("todos", JSON.stringify(tasksData));
   taskElement.parentNode.removeChild(taskElement);
+
   !tasksData.length && addClearList();
 }
 function updateTask(task, id) {
@@ -159,4 +180,12 @@ function editTask(id) {
         </span>
       </div>
     </div>`;
+}
+//Another functions
+function addClearList() {
+  tasksDiv.innerHTML = `
+            <div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 290px !important;">
+                <img src="./images/empty.png" alt="empty" width="100" height="100">
+                <h5 class="text-secondary">You have not added any tasks yet</h5>
+            </div>`
 }
