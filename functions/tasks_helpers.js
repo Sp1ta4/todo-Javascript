@@ -70,13 +70,21 @@ function updateCompleted(obj) {
 }
 
 function deleteTask(id) {
+  debugger
   const tasksDiv = document.querySelector('#tasks-div');
   const taskElement = document.getElementById(id);
+  const currentPage = Math.ceil(tasksData.findIndex(task => task.id === id) / pageMaxTasksCount);
   const updatedData = tasksData.filter(elem => id !== +elem.id);
   postData(updatedData);
   updateData();
   taskElement.remove();
-  !tasksData.length && addImageForEmptyData(tasksDiv);
+  if (tasksData.length) {
+    linksCount = Math.ceil(tasksData.length / pageMaxTasksCount);
+    addLinkElementsInPagination(linksCount);
+    renderTasks(listCalculation(tasksData, currentPage, pageMaxTasksCount));
+  } else {
+    addImageForEmptyData(tasksDiv);
+  }
 }
 
 function updateTask(task, id) {
@@ -98,7 +106,7 @@ function editTask(tasksData, id) {
       : `<div class="btn border rounded p-0 m-0" style="width:22px; height:22px" onmousedown="toggleTaskCompletion(${updatedTask.id})"></div>`}
       </div>
             <div class="editDiv d-flex">
-              <input type="text" class="form-control ms-3" id="formGroupExampleInput" value="${updatedTask.task}" maxlength="43">
+              <input type="text" class="form-control ms-3" id="editTaskInput" value="${updatedTask.task}" maxlength="43">
               <div class="btn btn-link p-2" onclick="(() => updateTask(this.parentNode.firstElementChild.value, ${id}))()">
                 <span class="material-symbols-outlined">
                   done
