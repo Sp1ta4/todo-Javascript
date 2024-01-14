@@ -4,32 +4,20 @@ const tasks = $.getElementsByClassName('.task');
 const addInput = $.querySelector('#formGroupExampleInput');
 const pagination = $.querySelector('.pagination');
 const pageMaxTasksCount = 5;
+let taskId = 0;
 let tasksData;
 
-
-
-window.addEventListener('load', () => {
-  tasksData = JSON.parse(localStorage.getItem("todos")) || [];
-  tasksData.length >= 5 && addPaginationLink(tasksData, pagination, pageMaxTasksCount);
-  renderTasks(tasksData.slice(0, pageMaxTasksCount), tasksDiv);
-  paginationLinkAddClick(tasksData, pageMaxTasksCount, tasksDiv);
-});
-
+updateData();
+taskId = updateID(taskId);
+renderTasks(tasksData.slice(0, pageMaxTasksCount));
+console.log(taskId);
 addInput.addEventListener('keydown', function (e) {
-  if (e.keyCode === 13) {
-    const newTask = { id: _.uniqueId(), task: addInput.value, completed: false };
+  if (e.keyCode === 13 && addInput.value) {
+    const newTask = { id: taskId, task: addInput.value, completed: false };
+    taskId++;
     tasksData.push(newTask);
-    localStorage.setItem("todos", JSON.stringify(tasksData));
-    if ((tasksData.length > 1) && !((tasksData.length - 1) % pageMaxTasksCount)) {
-      addPaginationLink(tasksData, pagination, pageMaxTasksCount);
-      paginationLinkAddClick(tasksData, pageMaxTasksCount, tasksDiv);
-    } else if (tasksData.length === 1) {
-      tasksDiv.innerHTML = '';
-      tasksDiv.appendChild(createTaskElement(tasksData, newTask))
-    } else {
-      tasksDiv.appendChild(createTaskElement(tasksData, newTask))
-    }
+    postData(tasksData);
+    renderTasks(tasksData.slice(0, pageMaxTasksCount));
     addInput.value = '';
-
   }
 })
