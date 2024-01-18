@@ -16,7 +16,6 @@ function paginationLinksFunction(self) {
 }
 
 function listCalculation(tasksData, currentPage, pageMaxTasksCount) {
-  debugger
   let start = ((currentPage - 1) * pageMaxTasksCount) >= 0 ? ((currentPage - 1) * pageMaxTasksCount) : 0;
   let end = start + pageMaxTasksCount;
   return tasksData.slice(start, end);

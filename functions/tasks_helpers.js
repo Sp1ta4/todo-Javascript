@@ -70,19 +70,21 @@ function updateCompleted(obj) {
 }
 
 function deleteTask(id) {
-  debugger
+  // debugger
   const tasksDiv = document.querySelector('#tasks-div');
   const taskElement = document.getElementById(id);
-  const currentPage = Math.ceil(tasksData.findIndex(task => task.id === id) / pageMaxTasksCount);
+  let currentPage = Math.ceil((tasksData.findIndex(task => +task.id === id) + 1) / pageMaxTasksCount);
   const updatedData = tasksData.filter(elem => id !== +elem.id);
   postData(updatedData);
   updateData();
+  currentListData = listCalculation(tasksData, linksCount, pageMaxTasksCount);
   taskElement.remove();
-  if (tasksData.length) {
+  if (!currentListData.length && tasksData.length) {
+    currentPage--;
     linksCount = Math.ceil(tasksData.length / pageMaxTasksCount);
     addLinkElementsInPagination(linksCount);
     renderTasks(listCalculation(tasksData, currentPage, pageMaxTasksCount));
-  } else {
+  } else if (!tasksData.length) {
     addImageForEmptyData(tasksDiv);
   }
 }
@@ -153,6 +155,6 @@ function updateData() {
 
 //ID function
 function updateID(id) {
-  id = tasksData.at(-1)?.id + 1 || 0;
+  id = +tasksData.at(-1)?.id + 1 || 0;
   return id
 }
